@@ -9,3 +9,6 @@ backup_*.sql
 # Ruido del sistema
 Thumbs.db
 .DS_Store
+
+.vercel
+.env*

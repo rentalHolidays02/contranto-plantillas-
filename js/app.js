@@ -66,7 +66,38 @@ document.addEventListener('DOMContentLoaded', () => {
   initControlListeners();
   renderSeasonsList();
   syncUIControlsFromConfig();
+  abrirContratoDeLaURL();
 });
+
+/**
+ * Abre directamente el contrato indicado en la dirección (?contrato=ID).
+ * Es el enlace que usa el portal de inicio para entrar a editar uno guardado.
+ */
+async function abrirContratoDeLaURL() {
+  const id = new URLSearchParams(location.search).get('contrato');
+  if (!id) return;
+
+  try {
+    const remoto = await dbGetContrato(id);
+    if (!remoto) {
+      showToast('Ese contrato ya no existe en la base de datos', 'danger');
+      return;
+    }
+
+    AppState.config = Object.assign({}, AppState.config, remoto.config);
+    AppState.formData = Object.assign({}, AppState.formData, remoto.form_data);
+    AppState.firmaBase64 = remoto.firma_base64 || null;
+    AppState.currentTemplateId = remoto.id;
+
+    renderContract();
+    syncUIControlsFromConfig();
+    updateTemplateDropdown();
+    showToast(`Contrato "${remoto.nombre}" abierto para editar`, 'success');
+  } catch (e) {
+    console.error(e);
+    showToast('No se pudo abrir el contrato: revisa que Tailscale esté conectado', 'danger');
+  }
+}
 
 /**
  * Inicializa fechas por defecto

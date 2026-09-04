@@ -7,8 +7,13 @@
 
 const DB_URL_KEY = 'rh_db_url';
 
+// Dirección de la base en el servidor de la oficina. Solo responde dentro del
+// tailnet, así que no es un secreto; tenerla aquí evita configurar cada equipo.
+const DB_URL_DEFECTO = 'https://rentalhost.tail5ff048.ts.net:8443';
+
 function getDbUrl() {
-  return (localStorage.getItem(DB_URL_KEY) || '').replace(/\/+$/, '');
+  const guardada = (localStorage.getItem(DB_URL_KEY) || '').trim();
+  return (guardada || DB_URL_DEFECTO).replace(/\/+$/, '');
 }
 
 function setDbUrl(url) {
@@ -79,13 +84,13 @@ async function dbPing() {
 function promptDbUrl() {
   const current = getDbUrl();
   const url = prompt(
-    'URL de la base de datos (la que te da "tailscale serve" en tu servidor), ej:\nhttps://tu-servidor.tu-tailnet.ts.net',
+    'Dirección de la base de datos.\nDéjala vacía para volver a la del servidor de la oficina.',
     current
   );
   if (url === null) return null;
   if (url.trim() === '') {
     clearDbUrl();
-    return null;
+    return getDbUrl();
   }
   setDbUrl(url);
   return getDbUrl();

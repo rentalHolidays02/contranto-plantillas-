@@ -181,6 +181,112 @@
       word-break: break-all;
     }
 
+    /* Lista de contratos guardados */
+    .saved {
+      margin-top: 46px;
+      padding-top: 30px;
+      border-top: 1px solid var(--border);
+    }
+
+    .saved-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .saved-head h2 {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--secondary);
+      margin: 0;
+    }
+
+    .saved-state {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-weight: 600;
+    }
+
+    .saved > p.hint {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin: 0 0 18px;
+    }
+
+    #buscador {
+      width: 100%;
+      max-width: 340px;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-family: inherit;
+      margin-bottom: 16px;
+    }
+
+    #buscador:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .fila {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 13px 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .fila:hover { border-color: var(--primary-border); box-shadow: var(--shadow-sm); }
+    .fila:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+    .fila-datos { min-width: 0; }
+
+    .fila-nombre {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .fila-fecha { font-size: 11.5px; color: var(--text-muted); }
+
+    .fila-accion {
+      font-family: var(--font-display);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .aviso {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 22px;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    .aviso strong { color: var(--secondary); display: block; margin-bottom: 4px; font-family: var(--font-display); }
+
     footer {
       border-top: 1px solid var(--border);
       background: #ffffff;
@@ -247,11 +353,84 @@
       </a>
 
     </div>
+
+    <section class="saved">
+      <div class="saved-head">
+        <h2>Contratos guardados</h2>
+        <span class="saved-state" id="estado">Buscando…</span>
+      </div>
+      <p class="hint">Abre cualquiera para seguir editándolo y descargar el PDF.</p>
+
+      <input type="text" id="buscador" placeholder="Buscar por nombre…" hidden autocomplete="off">
+      <div id="lista"></div>
+    </section>
   </main>
 
   <footer>
     Rental Holidays Experience, S.L. · Castellón
   </footer>
+
+  <script>
+    const BASE_DATOS = 'https://rentalhost.tail5ff048.ts.net:8443';
+    const APP = 'https://contranto-plantillas.vercel.app';
+
+    const lista = document.getElementById('lista');
+    const estado = document.getElementById('estado');
+    const buscador = document.getElementById('buscador');
+    let contratos = [];
+
+    function escapar(texto) {
+      const d = document.createElement('div');
+      d.textContent = texto;
+      return d.innerHTML;
+    }
+
+    function fecha(iso) {
+      return new Date(iso).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+
+    function pintar(filtro) {
+      const q = (filtro || '').trim().toLowerCase();
+      const visibles = contratos.filter(c => !q || c.nombre.toLowerCase().includes(q));
+
+      if (visibles.length === 0) {
+        lista.innerHTML = '<div class="aviso">' + (q
+          ? 'Ningún contrato coincide con esa búsqueda.'
+          : '<strong>Todavía no hay contratos guardados</strong>Crea uno en el generador y pulsa «Guardar Plantilla»: aparecerá aquí.') + '</div>';
+        return;
+      }
+
+      lista.innerHTML = visibles.map(c => `
+        <a class="fila" href="${APP}/?contrato=${encodeURIComponent(c.id)}">
+          <span class="fila-datos">
+            <span class="fila-nombre">${escapar(c.nombre)}</span>
+            <span class="fila-fecha">Actualizado el ${fecha(c.updated_at)}</span>
+          </span>
+          <span class="fila-accion">Abrir y editar →</span>
+        </a>
+      `).join('');
+    }
+
+    async function cargar() {
+      try {
+        const res = await fetch(BASE_DATOS + '/contratos?select=id,nombre,updated_at&order=updated_at.desc');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        contratos = await res.json();
+
+        estado.textContent = contratos.length === 1 ? '1 contrato' : contratos.length + ' contratos';
+        buscador.hidden = contratos.length < 6;
+        pintar('');
+      } catch (e) {
+        estado.textContent = 'Sin conexión';
+        lista.innerHTML = '<div class="aviso"><strong>No se ve la base de datos</strong>' +
+          'Los contratos guardados solo son visibles desde los equipos conectados a Tailscale. ' +
+          'Comprueba que esté activo en este ordenador y recarga la página.</div>';
+      }
+    }
+
+    buscador.addEventListener('input', () => pintar(buscador.value));
+    cargar();
+  </script>
 
 </body>
 </html>
