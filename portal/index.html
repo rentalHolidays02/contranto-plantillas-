@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rental Holidays — Contratos y formularios</title>
+  <link rel="icon" href="logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap">
+  <style>
+    :root {
+      --primary: #E31B13;
+      --primary-hover: #c4150e;
+      --primary-light: #fff0ef;
+      --primary-border: #fecaca;
+      --accent: #EF9618;
+      --secondary: #1e293b;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 10px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+      --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      --font-display: 'Manrope', var(--font-sans);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Cabecera, igual que la de la aplicación de contratos */
+    .app-header {
+      background: #ffffff;
+      border-bottom: 2px solid var(--border);
+      padding: 10px 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo { height: 44px; width: auto; }
+
+    .brand-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid var(--primary-border);
+    }
+
+    main {
+      flex: 1;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 44px 20px 56px;
+    }
+
+    .page-intro { margin-bottom: 30px; }
+
+    .page-intro h1 {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 4vw, 32px);
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      color: var(--secondary);
+      margin-bottom: 6px;
+    }
+
+    .page-intro p {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      max-width: 60ch;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    @media (min-width: 760px) {
+      .card-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 22px 22px 18px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+      border-color: var(--primary-border);
+    }
+
+    .card:focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 3px;
+    }
+
+    .icon-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9px;
+      font-size: 19px;
+      border: 1px solid var(--primary-border);
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--secondary);
+      margin-bottom: 6px;
+    }
+
+    .card-text {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      flex: 1;
+      margin-bottom: 16px;
+    }
+
+    .card-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .card-action .arrow { transition: transform 0.2s ease; }
+    .card:hover .card-action .arrow { transform: translateX(3px); }
+
+    .card-host {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      word-break: break-all;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: #ffffff;
+      padding: 16px 24px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card, .card-action .arrow { transition: none; }
+      .card:hover { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-container">
+      <img src="logo.svg" alt="Rental Holidays" class="brand-logo">
+      <span class="brand-badge">Contratos 2026</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-intro">
+      <h1>Contratos y formularios</h1>
+      <p>Accesos directos a las herramientas de mediación. Elige la que necesites.</p>
+    </div>
+
+    <div class="card-grid">
+
+      <a class="card" href="https://contranto-plantillas.vercel.app/">
+        <span class="icon-badge" aria-hidden="true">📄</span>
+        <span class="card-title">Plantillas de contrato</span>
+        <span class="card-text">
+          Genera el contrato de mediación con los datos del propietario, la firma
+          y el cuadro de precios, y descárgalo en PDF listo para firmar.
+        </span>
+        <span class="card-action">Abrir generador <span class="arrow" aria-hidden="true">→</span></span>
+        <span class="card-host">contranto-plantillas.vercel.app</span>
+      </a>
+
+      <a class="card" href="https://rental-holidays.duckdns.org/mediacion/formulario.html">
+        <span class="icon-badge" aria-hidden="true">📝</span>
+        <span class="card-title">Formulario de mediación</span>
+        <span class="card-text">
+          Recogida de datos del propietario y del inmueble para dar de alta una
+          nueva vivienda en gestión.
+        </span>
+        <span class="card-action">Abrir formulario <span class="arrow" aria-hidden="true">→</span></span>
+        <span class="card-host">rental-holidays.duckdns.org</span>
+      </a>
+
+      <a class="card" href="https://rental-holidays.duckdns.org/mediacion/formulario_importe_fijo.html">
+        <span class="icon-badge" aria-hidden="true">💶</span>
+        <span class="card-title">Formulario de importe fijo</span>
+        <span class="card-text">
+          Misma alta, en la modalidad de importe fijo acordado por periodo en
+          lugar de comisión sobre la reserva.
+        </span>
+        <span class="card-action">Abrir formulario <span class="arrow" aria-hidden="true">→</span></span>
+        <span class="card-host">rental-holidays.duckdns.org</span>
+      </a>
+
+    </div>
+  </main>
+
+  <footer>
+    Rental Holidays Experience, S.L. · Castellón
+  </footer>
+
+</body>
+</html>
