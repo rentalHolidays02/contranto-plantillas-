@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plantilla y Generador de Contrato - Rental Holidays</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&display=swap">
+  <!-- ?v= evita que el navegador sirva versiones viejas desde caché al abrir por file:// -->
+  <link rel="stylesheet" href="css/styles.css?v=4">
+  <script src="js/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+  <!-- CABECERA PRINCIPAL -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-section">
+        <img src="assets/logo.svg" alt="Rental Holidays" class="brand-logo" />
+        <span class="brand-badge">Contratos 2026</span>
+      </div>
+
+      <!-- Selector y Gestor de Plantillas -->
+      <div class="template-bar-header">
+        <label for="selectPlantillas" style="font-size: 12px; font-weight: 700; color: var(--secondary-light);">Plantilla:</label>
+        <select id="selectPlantillas" onchange="onTemplateSelected(this.value)">
+          <option value="default">⭐ Plantilla Oficial Rental Holidays</option>
+        </select>
+        <button type="button" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;" onclick="openSaveTemplateModal()" title="Guardar cambios como nueva plantilla">
+          ⭐ Guardar Plantilla
+        </button>
+        <button type="button" id="btnEliminarPlantilla" class="btn btn-danger-outline" style="padding: 5px 9px; font-size: 12px; display: none;" onclick="deleteCurrentTemplate()" title="Eliminar plantilla seleccionada">
+          🗑️
+        </button>
+        <button type="button" id="dbStatusBadge" class="db-status-badge db-status-offline" onclick="connectDbPrompt()" title="Conectar con la base de datos compartida entre PCs">
+          💾 Solo local
+        </button>
+        <button type="button" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;" onclick="openContractsListModal()" title="Ver todos los contratos guardados">
+          📋 Mis Contratos
+        </button>
+      </div>
+
+      <!-- Acciones de Exportación -->
+      <div class="header-actions">
+        <input type="file" id="inputImportJSON" accept=".json" style="display: none;" onchange="importTemplatesJSON(event)">
+        <button type="button" class="btn btn-secondary" style="font-size: 12.5px; padding: 7px 12px;" onclick="document.getElementById('inputImportJSON').click()">
+          📥 Importar
+        </button>
+        <button type="button" class="btn btn-primary" onclick="downloadPDF()">
+          📄 Descargar PDF
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ESPACIO DE TRABAJO UNIFICADO (2 COLUMNAS) -->
+  <main class="workspace-container">
+
+    <!-- ==========================================
+         COLUMNA IZQUIERDA: FORMULARIO + FECHAS
+         ========================================== -->
+    <aside class="control-panel">
+
+      <!-- 1. FECHA DEL CONTRATO -->
+      <div class="card">
+        <div class="card-title">
+          <div><span class="icon-badge">📅</span> Fecha del Contrato</div>
+          <label class="switch-control">
+            <input type="checkbox" id="chkIncluirFecha" checked>
+            <span class="switch-label">Fecha fija</span>
+          </label>
+        </div>
+        <div id="contenedorFechaInput" class="form-group" style="margin-bottom: 6px;">
+          <label for="fechaContrato">Fecha de Firma</label>
+          <input type="date" id="fechaContrato">
+          <span class="help-text">Se mostrará en el encabezado del contrato legal.</span>
+        </div>
+        <div class="help-text" style="font-style: italic; margin-top: 4px;">
+          💡 Si desmarcas "Fecha fija", el contrato queda con fecha abierta para firmar a mano.
+        </div>
+      </div>
+
+      <!-- 2. MODALIDAD DE DURACIÓN & FECHAS MENSUALES -->
+      <div class="card">
+        <div class="card-title">
+          <div><span class="icon-badge">🗓️</span> Duración & Periodos</div>
+        </div>
+
+        <div class="mode-selector-tabs">
+          <label class="mode-tab-option">
+            <input type="radio" name="modoDuracion" value="mensual" checked>
+            <div class="mode-tab-card">
+              <span class="mode-tab-title">🗓️ Fechas Mensuales</span>
+              <span style="font-size: 10px; color: var(--text-muted);">Por meses acordados</span>
+            </div>
+          </label>
+          <label class="mode-tab-option">
+            <input type="radio" name="modoDuracion" value="temporadas">
+            <div class="mode-tab-card">
+              <span class="mode-tab-title">☀️ Por Temporadas</span>
+              <span style="font-size: 10px; color: var(--text-muted);">Alta, Media, Baja...</span>
+            </div>
+          </label>
+          <label class="mode-tab-option">
+            <input type="radio" name="modoDuracion" value="fechas">
+            <div class="mode-tab-card">
+              <span class="mode-tab-title">📅 Fecha Fija</span>
+              <span style="font-size: 10px; color: var(--text-muted);">Anual renovable</span>
+            </div>
+          </label>
+          <label class="mode-tab-option">
+            <input type="radio" name="modoDuracion" value="indefinido">
+            <div class="mode-tab-card">
+              <span class="mode-tab-title">♾️ Indefinido</span>
+              <span style="font-size: 10px; color: var(--text-muted);">Sin fin prefijado</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- PANEL: FECHAS MENSUALES CON FECHAS POR MES -->
+        <div id="panelModoMensual" class="monthly-dates-box" style="display: block;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="font-size: 12.5px; color: var(--secondary);">Seleccionar Meses:</strong>
+            <select id="selTipoMensual" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);">
+              <option value="completo">Mes Completo</option>
+              <option value="quincenal">Por Quincenas</option>
+              <option value="personalizado">Fechas Personalizadas</option>
+            </select>
+          </div>
+          <div class="monthly-presets">
+            <button type="button" class="preset-btn" onclick="setMonthPreset('verano')">Verano (Jun-Sep)</button>
+            <button type="button" class="preset-btn" onclick="setMonthPreset('alta')">Alta (Jul-Ago)</button>
+            <button type="button" class="preset-btn" onclick="setMonthPreset('anual')">Todo el año</button>
+            <button type="button" class="preset-btn" onclick="setMonthPreset('limpiar')">Limpiar</button>
+          </div>
+          <div class="months-grid">
+            <div class="month-chip" data-month="1">Ene</div>
+            <div class="month-chip" data-month="2">Feb</div>
+            <div class="month-chip" data-month="3">Mar</div>
+            <div class="month-chip" data-month="4">Abr</div>
+            <div class="month-chip" data-month="5">May</div>
+            <div class="month-chip" data-month="6">Jun</div>
+            <div class="month-chip" data-month="7">Jul</div>
+            <div class="month-chip" data-month="8">Ago</div>
+            <div class="month-chip" data-month="9">Sep</div>
+            <div class="month-chip" data-month="10">Oct</div>
+            <div class="month-chip" data-month="11">Nov</div>
+            <div class="month-chip" data-month="12">Dic</div>
+          </div>
+          <span class="help-text" style="display: block; margin-bottom: 12px;">Clic en un mes para seleccionarlo. Los meses se insertan en la Cláusula 1 y 3.</span>
+
+          <!-- IMPORTES DE LOS MESES -->
+          <div class="monthly-amounts">
+            <div class="form-group" style="margin-bottom: 8px;">
+              <label for="importeMensual">💶 Importe del mes (€)</label>
+              <input type="number" id="importeMensual" min="0" step="0.01" placeholder="Ej: 1200">
+              <span class="help-text">Se aplica a todos los meses seleccionados.</span>
+            </div>
+            <label class="switch-control" style="margin-bottom: 8px;">
+              <input type="checkbox" id="chkImportePorMes">
+              <span class="switch-label">Importe específico por mes</span>
+            </label>
+            <div id="monthAmountsContainer" style="display: none; flex-direction: column; gap: 6px;"></div>
+            <span class="help-text" style="margin-top: 8px; display: block;">Los importes se publican en el <strong>ANEXO I</strong> del contrato.</span>
+          </div>
+        </div>
+
+        <!-- PANEL: POR TEMPORADAS -->
+        <div id="panelModoTemporadas" class="seasons-manager" style="display: none;">
+          <div class="seasons-header">
+            <strong style="font-size: 12.5px; color: var(--secondary);">Temporadas Definidas:</strong>
+            <button type="button" class="btn btn-secondary" style="padding: 3px 8px; font-size: 11px;" onclick="addSeason()">+ Añadir</button>
+          </div>
+          <div id="seasonsListContainer"></div>
+        </div>
+
+        <!-- PANEL: FECHA FIJA ANUAL -->
+        <div id="panelModoFechas" style="display: none; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="fechaFinContrato">Fecha Límite Inicial</label>
+            <input type="text" id="fechaFinContrato" value="31 de octubre de 2026" placeholder="31 de octubre de 2026">
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. DATOS DEL PROPIETARIO (COMPARECE) -->
+      <div class="card">
+        <div class="card-title">
+          <div><span class="icon-badge">👤</span> Datos del Propietario</div>
+        </div>
+        <div class="form-group">
+          <label for="nombrePropietario">Nombre Completo (Doña/Don)</label>
+          <input type="text" id="nombrePropietario" placeholder="Nombre y Apellidos" oninput="onFieldInput('nombrePropietario', this.value)">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label for="nifPropietario">NIF / NIE</label>
+            <input type="text" id="nifPropietario" placeholder="12345678X" oninput="onFieldInput('nifPropietario', this.value)">
+          </div>
+          <div class="form-group">
+            <label for="cpPropietario">Código Postal</label>
+            <input type="text" id="cpPropietario" placeholder="12003" oninput="onFieldInput('cpPropietario', this.value)">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="domicilioPropietario">Domicilio Completo</label>
+          <input type="text" id="domicilioPropietario" placeholder="Calle, Número, Ciudad" oninput="onFieldInput('domicilioPropietario', this.value)">
+        </div>
+      </div>
+
+      <!-- 4. INMUEBLE TURÍSTICO (EXPONEN) -->
+      <div class="card">
+        <div class="card-title">
+          <div><span class="icon-badge">🏠</span> Inmueble Turístico</div>
+        </div>
+        <div class="form-group">
+          <label for="descripcionVivienda">Ubicación / Descripción</label>
+          <input type="text" id="descripcionVivienda" placeholder="Ej: Apartamento en Primera Línea de Playa" oninput="onFieldInput('descripcionVivienda', this.value)">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label for="refInmueble">Nº Registro VT</label>
+            <input type="text" id="refInmueble" placeholder="VT-XXXXX-CS" oninput="onFieldInput('refInmueble', this.value)">
+          </div>
+          <div class="form-group">
+            <label for="municipioInmueble">Municipio</label>
+            <input type="text" id="municipioInmueble" placeholder="Castellón / Peñíscola" oninput="onFieldInput('municipioInmueble', this.value)">
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. CLÁUSULA ESPECIAL -->
+      <div class="card">
+        <div class="card-title">
+          <div><span class="icon-badge">📝</span> Cláusula Especial</div>
+        </div>
+        <div class="form-group">
+          <label for="clausulaEspecial">Acuerdos o pactos adicionales</label>
+          <textarea id="clausulaEspecial" rows="3" placeholder="Ej: El propietario se reserva la primera quincena de julio..." oninput="onFieldInput('clausulaEspecial', this.value)" style="resize: vertical;"></textarea>
+        </div>
+      </div>
+
+      <!-- 6. FIRMA DIGITAL -->
+      <div class="card">
+        <div class="card-title">
+          <div><span class="icon-badge">✍️</span> Firma del Propietario</div>
+          <button type="button" class="btn-danger-outline btn" style="padding: 3px 8px; font-size: 11px;" onclick="limpiarFirma()">Limpiar</button>
+        </div>
+        <div class="signature-box">
+          <canvas id="canvasFirma"></canvas>
+          <div class="sig-actions">
+            <span class="sig-status" id="sigStatusText">Dibuja con ratón o dedo</span>
+            <span style="font-size: 10.5px; color: #94a3b8;">Aparece en el contrato</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. ACCIONES RÁPIDAS -->
+      <div class="card" style="background: #fdfefe;">
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button type="button" class="btn btn-primary" style="width: 100%; padding: 12px;" onclick="downloadPDF()">
+            📄 Descargar Contrato PDF
+          </button>
+          <button type="button" class="btn btn-success" style="width: 100%;" onclick="openSaveTemplateModal()">
+            ⭐ Guardar como Plantilla
+          </button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ==========================================
+         COLUMNA DERECHA: CONTRATO LEGAL A4 EN VIVO
+         ========================================== -->
+    <section class="document-view-column">
+
+      <!-- BARRA DE HERRAMIENTAS DE EDICIÓN -->
+      <div class="editor-toolbar">
+        <div class="toolbar-group">
+          <button type="button" class="tool-btn" onclick="formatDoc('bold')" title="Negrita"><strong>B</strong></button>
+          <button type="button" class="tool-btn" onclick="formatDoc('italic')" title="Cursiva"><em>I</em></button>
+          <button type="button" class="tool-btn" onclick="formatDoc('underline')" title="Subrayado"><u>U</u></button>
+          <div class="tool-divider"></div>
+          <button type="button" class="tool-btn" onclick="addNewClause()">➕ Añadir Cláusula</button>
+          <button type="button" class="tool-btn" onclick="resetToDefaultContract()">🔄 Restaurar Oficial</button>
+        </div>
+        <div class="editor-badge-hint">
+          <span>📝 Los textos del contrato también son editables directamente con un clic</span>
+        </div>
+        <div class="toolbar-group">
+          <button type="button" class="btn btn-primary" style="padding: 6px 14px; font-size: 12.5px;" onclick="downloadPDF()">
+            📄 Descargar PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- HOJA LEGAL A4 -->
+      <div class="document-container">
+        <div id="contratoDocumento" class="legal-sheet">
+          <!-- Generado dinámicamente por contractData.js -->
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- MODAL: GUARDAR COMO PLANTILLA -->
+  <div id="modalGuardarPlantilla" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="modal-title">⭐ Guardar como Plantilla</h3>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+        Asigna un nombre a esta plantilla para reutilizarla fácilmente en el futuro con otros propietarios o periodos.
+      </p>
+      <div class="form-group">
+        <label for="inputNombrePlantilla">Nombre de la Plantilla</label>
+        <input type="text" id="inputNombrePlantilla" placeholder="Ej: Plantilla Mensual Verano 2026">
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeSaveTemplateModal()">Cancelar</button>
+        <button type="button" class="btn btn-success" onclick="confirmSaveTemplate()">Guardar Plantilla</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MIS CONTRATOS (buscar / cargar / eliminar) -->
+  <div id="modalMisContratos" class="modal-overlay">
+    <div class="modal-content" style="max-width: 560px;">
+      <h3 class="modal-title">📋 Mis Contratos</h3>
+      <input type="text" id="inputBuscarContrato" class="contracts-search" placeholder="Buscar por nombre de propietario o plantilla…" oninput="renderContractsList(this.value)">
+      <div id="contractsListContainer" class="contracts-list"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeContractsListModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OVERLAY DE CARGA -->
+  <div id="overlayLoading" class="modal-overlay">
+    <div style="background: white; border-radius: 12px; padding: 25px; text-align: center; max-width: 320px; box-shadow: var(--shadow-lg);">
+      <div class="spinner"></div>
+      <h4 style="color: var(--secondary); margin-bottom: 6px; margin-top: 10px;">Generando PDF</h4>
+      <p style="font-size: 12px; color: var(--text-muted);">Preparando el documento legal oficial...</p>
+    </div>
+  </div>
+
+  <style>
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 4px solid #f1f5f9;
+      border-top: 4px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto;
+    }
+  </style>
+
+  <script src="js/contractData.js?v=4"></script>
+  <script src="js/signature.js?v=4"></script>
+  <script src="js/db.js?v=4"></script>
+  <script src="js/app.js?v=4"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Credenciales del servidor de base de datos: nunca al repositorio
+server/.env
+
+# Ruido del sistema
+Thumbs.db
+.DS_Store

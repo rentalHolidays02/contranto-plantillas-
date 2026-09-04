@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: contratos
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    # Solo accesible desde el propio servidor (para psql/debug manual si hace falta)
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  postgrest:
+    image: postgrest/postgrest:v12.2.3
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PGRST_DB_URI: postgres://postgres:${POSTGRES_PASSWORD}@db:5432/contratos
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: web_anon
+    # Solo en localhost: se expone al tailnet con `tailscale serve`, nunca a internet
+    ports:
+      - "127.0.0.1:3001:3000"
+
+volumes:
+  db_data:

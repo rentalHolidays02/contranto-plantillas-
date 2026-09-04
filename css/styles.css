@@ -1,0 +1,1318 @@
+/* =========================================================
+   RENTAL HOLIDAYS - SISTEMA DE CONTRATO EDITABLE
+   Estilos de interfaz moderna y documento legal oficial A4
+   ========================================================= */
+
+:root {
+  --primary: #E31B13;
+  --primary-hover: #c4150e;
+  --primary-light: #fff0ef;
+  --primary-border: #fecaca;
+  --secondary: #1e293b;
+  --secondary-light: #334155;
+  --accent: #990000;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --border-focus: #E31B13;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --radius: 10px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-legal: 'Times New Roman', Times, Georgia, serif;
+  --font-display: 'Manrope', var(--font-sans);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ==========================================
+   APP HEADER
+   ========================================== */
+.app-header {
+  background: #ffffff;
+  border-bottom: 2px solid var(--border);
+  padding: 10px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  height: 44px;
+  width: auto;
+}
+
+.brand-badge {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid var(--primary-border);
+}
+
+/* Template Selector Bar in Header */
+.template-bar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f5f9;
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.template-bar-header select {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--secondary);
+  background: white;
+  min-width: 220px;
+  cursor: pointer;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Common Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 4px 12px rgba(227, 27, 19, 0.3);
+}
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: var(--text-main);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover {
+  background: #e2e8f0;
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+.btn-success:hover {
+  background: #0d9668;
+}
+
+.btn-danger-outline {
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+.btn-danger-outline:hover {
+  background: #fef2f2;
+}
+
+/* ==========================================
+   MAIN 2-COLUMN WORKSPACE
+   ========================================== */
+.workspace-container {
+  max-width: 1600px;
+  margin: 16px auto;
+  padding: 0 20px 40px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (min-width: 1100px) {
+  .workspace-container {
+    grid-template-columns: 420px 1fr;
+  }
+}
+
+/* Control Panel (Left Column) */
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+@media (min-width: 1100px) {
+  .control-panel {
+    position: sticky;
+    top: 76px;
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  
+  .control-panel::-webkit-scrollbar {
+    width: 6px;
+  }
+  .control-panel::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  padding: 18px 20px;
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+/* Estado de sincronización con la base de datos compartida */
+.db-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  background: #f1f5f9;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.db-status-badge:hover { filter: brightness(0.97); }
+.db-status-badge.db-status-online {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  color: #047857;
+}
+.db-status-badge.db-status-offline {
+  background: #f1f5f9;
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+.db-status-badge.db-status-error {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #c2410c;
+}
+.db-status-badge.db-status-checking {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.card-title .icon-badge {
+  background: var(--primary-light);
+  color: var(--primary);
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 13px;
+  margin-right: 6px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-family: inherit;
+  background: #ffffff;
+  color: var(--text-main);
+  transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(227, 27, 19, 0.15);
+}
+
+.help-text {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+/* Switch Controls */
+.switch-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch-control input[type="checkbox"] {
+  width: 36px;
+  height: 20px;
+  appearance: none;
+  background: #cbd5e1;
+  border-radius: 20px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.switch-control input[type="checkbox"]:checked {
+  background: var(--primary);
+}
+
+.switch-control input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.switch-control input[type="checkbox"]:checked::after {
+  left: 18px;
+}
+
+.switch-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* Mode Selection Pills */
+.mode-selector-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.mode-tab-option {
+  position: relative;
+}
+
+.mode-tab-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.mode-tab-card {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.mode-tab-card:hover {
+  border-color: #cbd5e1;
+}
+
+.mode-tab-option input[type="radio"]:checked + .mode-tab-card {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.mode-tab-title {
+  font-size: 12.5px;
+  display: block;
+}
+
+/* Spans de datos inyectados desde el formulario */
+.data-field {
+  font-weight: bold;
+  color: #000;
+  border-bottom: 1px dotted #888;
+  min-width: 20px;
+  display: inline;
+  transition: background 0.2s;
+}
+
+@media screen {
+  .data-field:empty::before {
+    content: attr(data-placeholder, '______');
+    color: #aaa;
+    font-weight: normal;
+    font-style: italic;
+  }
+}
+
+/* ==========================================
+   NUEVO: SELECTOR DE FECHAS MENSUALES
+   ========================================== */
+.monthly-dates-box {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.monthly-presets {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.preset-btn {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 4px 9px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.preset-btn:hover {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+.months-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.month-chip {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 4px;
+  text-align: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+  color: #334155;
+}
+
+.month-chip:hover {
+  border-color: var(--primary-border);
+}
+
+.month-chip.selected {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 2px 6px rgba(227, 27, 19, 0.25);
+}
+
+/* Importes por mes */
+.monthly-amounts {
+  border-top: 1px dashed var(--border);
+  padding-top: 12px;
+}
+
+.month-amount-row {
+  display: grid;
+  grid-template-columns: 1fr 110px auto;
+  gap: 8px;
+  align-items: center;
+  background: white;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.month-amount-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.month-amount-row input {
+  padding: 6px 8px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  text-align: right;
+  width: 100%;
+}
+
+.month-amount-currency {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+/* Temporadas Table */
+.seasons-manager {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.seasons-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.season-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 6px;
+  align-items: center;
+  background: white;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+/* El nombre ocupa su propia línea; periodo, mínimo y borrar van debajo */
+.season-row input:first-child {
+  grid-column: 1 / -1;
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.season-row input {
+  min-width: 0; /* sin esto los inputs no encogen dentro del grid y desbordan el panel */
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.season-row input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+}
+
+.btn-icon-danger {
+  background: #fee2e2;
+  color: var(--danger);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 12px;
+}
+
+.btn-icon-danger:hover {
+  background: var(--danger);
+  color: white;
+}
+
+/* Signature Box */
+.signature-box {
+  background: #ffffff;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+canvas#canvasFirma {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  width: 100%;
+  height: 150px;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.sig-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.sig-status {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+/* ==========================================
+   DOCUMENT VIEW (RIGHT COLUMN)
+   ========================================== */
+.document-view-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Floating / Sticky Toolbar */
+.editor-toolbar {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 72px;
+  z-index: 90;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tool-btn {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  padding: 6px 11px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--secondary);
+}
+
+.tool-btn:hover {
+  background: #e2e8f0;
+}
+
+.tool-btn:active {
+  background: #cbd5e1;
+}
+
+.tool-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
+.editor-badge-hint {
+  font-size: 12px;
+  background: #ecfdf5;
+  color: #065f46;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid #a7f3d0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ==========================================
+   SIMULADOR DE DOCUMENTO LEGAL OFICIAL A4
+   ========================================== */
+.document-container {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+.legal-sheet {
+  background: #ffffff;
+  width: 100%;
+  max-width: 860px;
+  min-height: 1100px;
+  padding: 65px 65px 75px 65px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  font-family: var(--font-legal);
+  color: #111111;
+  font-size: 11pt;
+  line-height: 1.6;
+  text-align: justify;
+  position: relative;
+}
+
+/* ==========================================
+   CAMPOS DIRECTAMENTE EN EL CONTRATO (INLINE)
+   ========================================== */
+.inline-contract-input {
+  display: inline-block;
+  font-family: var(--font-legal);
+  font-size: 11pt;
+  font-weight: bold;
+  color: #000000;
+  background-color: #fffef8;
+  border: none;
+  border-bottom: 1.5px solid #222;
+  border-radius: 0;
+  padding: 1px 5px;
+  margin: 0 2px;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.inline-contract-input:focus {
+  background-color: #fffbeb;
+  border-bottom: 2px solid var(--primary);
+  box-shadow: 0 2px 5px rgba(227, 27, 19, 0.15);
+}
+
+.inline-contract-input::placeholder {
+  font-style: italic;
+  font-weight: normal;
+  color: #94a3b8;
+  font-size: 10pt;
+}
+
+.input-owner { width: 260px; }
+.input-nif { width: 110px; }
+.input-address { width: 300px; }
+.input-cp { width: 70px; }
+.input-desc { width: 100%; max-width: 440px; }
+.input-city { width: 150px; }
+.input-reg { width: 130px; }
+
+/* Legal Header & Title */
+.legal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+  padding-bottom: 12px;
+}
+
+.contract-logo {
+  height: 58px;
+  width: auto;
+}
+
+.header-date {
+  font-size: 11pt;
+  font-weight: 600;
+  text-align: right;
+  min-width: 250px;
+  outline: none;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.header-date:focus {
+  background: #fffbeb;
+  box-shadow: 0 0 0 1px #f59e0b;
+}
+
+.contract-title {
+  text-align: center;
+  font-size: 14pt;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  margin-bottom: 25px;
+  line-height: 1.3;
+  outline: none;
+  padding: 4px;
+}
+
+.contract-title:focus {
+  background: #fffbeb;
+  box-shadow: 0 0 0 1px #f59e0b;
+}
+
+.legal-section-title {
+  text-align: center;
+  font-size: 12pt;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin: 22px 0 12px 0;
+  outline: none;
+}
+
+.legal-section-title.centered-title {
+  font-size: 13pt;
+  margin-top: 30px;
+  margin-bottom: 16px;
+  border-top: 1px solid #ccc;
+  padding-top: 18px;
+}
+
+.legal-paragraph {
+  margin-bottom: 12px;
+  outline: none;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background 0.15s;
+}
+
+.legal-paragraph:focus {
+  background: #fffbeb;
+  box-shadow: 0 0 0 1px #f59e0b;
+}
+
+.legal-paragraph.indent-paragraph {
+  padding-left: 20px;
+}
+
+.highlight-clause {
+  background: #fbfbfb;
+  border-left: 3px solid #666;
+  padding: 8px 12px;
+  margin: 14px 0;
+}
+
+.clause-item {
+  margin-top: 16px;
+  margin-bottom: 18px;
+  page-break-inside: avoid;
+}
+
+.clause-title {
+  font-size: 11.5pt;
+  font-weight: bold;
+  margin-bottom: 6px;
+  outline: none;
+  color: #000;
+}
+
+.clause-title:focus {
+  background: #fffbeb;
+  box-shadow: 0 0 0 1px #f59e0b;
+}
+
+.legal-list {
+  margin-left: 18px;
+  margin-bottom: 12px;
+  outline: none;
+}
+
+.legal-list li {
+  margin-bottom: 6px;
+  padding: 2px 4px;
+}
+
+.legal-list.bullet-list {
+  list-style-type: disc;
+}
+
+.special-clause-box {
+  border: 1.5px solid #222;
+  padding: 14px 18px;
+  margin: 24px 0;
+  background: #fafafa;
+  outline: none;
+  page-break-inside: avoid;
+}
+
+.special-clause-title {
+  font-weight: bold;
+  font-size: 11pt;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.special-clause-content {
+  font-style: italic;
+  white-space: pre-wrap;
+  outline: none;
+}
+
+/* Signatures */
+.closing-paragraph {
+  margin: 25px 0 35px 0;
+  outline: none;
+  text-align: justify;
+}
+
+.signatures-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 30px;
+  margin-top: 30px;
+  page-break-inside: avoid;
+}
+
+.signature-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.sig-title {
+  font-weight: bold;
+  font-size: 11pt;
+  margin-bottom: 8px;
+}
+
+.signature-slot {
+  height: 90px;
+  width: 100%;
+  max-width: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.signature-slot img {
+  max-height: 85px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.sig-line {
+  width: 100%;
+  max-width: 260px;
+  border-top: 1.5px solid #000;
+  margin-bottom: 8px;
+}
+
+.sig-name {
+  font-size: 10pt;
+  outline: none;
+  width: 100%;
+}
+
+.page-break-hint {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 9pt;
+  font-family: var(--font-sans);
+  margin: 30px 0;
+  position: relative;
+  user-select: none;
+}
+
+.page-break-hint::before,
+.page-break-hint::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 30%;
+  height: 1px;
+  background: #cbd5e1;
+}
+.page-break-hint::before { left: 0; }
+.page-break-hint::after { right: 0; }
+
+/* Modal de Guardar Plantilla */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 440px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--secondary);
+  margin-bottom: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* Modal "Mis Contratos" */
+.contracts-search {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+.contracts-search:focus {
+  outline: none;
+  border-color: var(--border-focus);
+}
+
+.contracts-list {
+  max-height: 360px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contracts-empty {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 24px 10px;
+}
+
+.contract-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fbfcfd;
+}
+
+.contract-row-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.contract-row-info strong {
+  font-size: 13.5px;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.contract-row-info span {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.contract-row-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: #1e293b;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideUp 0.3s ease;
+}
+
+.toast.toast-success { border-left: 4px solid var(--success); }
+.toast.toast-danger { border-left: 4px solid var(--danger); }
+.toast.toast-info { border-left: 4px solid #3b82f6; }
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ==========================================
+   ESTILOS DE IMPRESIÓN Y EXPORTACIÓN A4
+   ========================================== */
+/* ==========================================
+   ANEXO I - CUADRO DE PRECIOS
+   ========================================== */
+.anexo-section {
+  margin-top: 34px;
+  padding-top: 22px;
+}
+
+.anexo-title {
+  font-family: var(--font-legal);
+  font-size: 14pt;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+
+.anexo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-legal);
+  font-size: 11pt;
+  margin: 12px 0;
+}
+
+.anexo-table th,
+.anexo-table td {
+  border: 1px solid #000;
+  padding: 7px 10px;
+  text-align: left;
+}
+
+.anexo-table thead th {
+  background: #f1f5f9;
+  font-weight: bold;
+}
+
+.anexo-table tfoot td {
+  background: #f8fafc;
+}
+
+.anexo-table .anexo-importe {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.anexo-nota {
+  font-size: 9.5pt;
+  font-style: italic;
+}
+
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 10.5pt;
+    margin: 0;
+    padding: 0;
+  }
+
+  .app-header,
+  .control-panel,
+  .editor-toolbar,
+  .page-break-hint,
+  .btn,
+  .toast-container,
+  .modal-overlay,
+  #overlayLoading {
+    display: none !important;
+  }
+
+  .workspace-container {
+    display: block !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .document-view-column {
+    width: 100% !important;
+  }
+
+  .document-container {
+    padding: 0 !important;
+  }
+
+  .legal-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Los inputs inline se convierten en texto puro continuo */
+  input.inline-contract-input {
+    border: none !important;
+    border-bottom: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: auto !important;
+    display: inline !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: bold !important;
+    color: #000 !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 15mm 15mm 15mm 15mm;
+  }
+}
+
+/* ==========================================
+   PAGINACIÓN DEL DOCUMENTO
+   Fuera de @media print a propósito: html2pdf lee estas propiedades con
+   getComputedStyle sobre el documento en pantalla, donde las reglas de
+   @media print no se aplican. En pantalla no tienen efecto visual.
+   ========================================== */
+.clause-item,
+.special-clause-box,
+.signatures-wrapper,
+.anexo-table,
+.legal-paragraph {
+  page-break-inside: avoid;
+}
+
+.clause-title,
+.legal-section-title {
+  page-break-after: avoid;
+}
+
+.anexo-section,
+.starts-new-page {
+  page-break-before: always;
+}
+
+/* Marcas de solo-pantalla: fuera durante la exportación, para que html2pdf mida
+   y rasterice exactamente el mismo layout. */
+.exporting-pdf .page-break-hint {
+  display: none;
+}
+
+/* El marco de la hoja es decoración de pantalla. html2canvas no aplica
+   @media print, así que sin esto acaba dibujado en el PDF. */
+.legal-sheet.exporting-pdf {
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+}
