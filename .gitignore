@@ -1,5 +1,10 @@
 # Credenciales del servidor de base de datos: nunca al repositorio
-server/.env
+.env
+*.env
+
+# Copias de seguridad de la base
+*.sql.gz
+backup_*.sql
 
 # Ruido del sistema
 Thumbs.db

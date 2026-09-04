@@ -16,7 +16,10 @@ create index if not exists idx_contratos_nombre on contratos (nombre);
 
 -- Rol anónimo que usa PostgREST. Solo accesible desde dentro del tailnet
 -- (el puerto de PostgREST se publica exclusivamente en 127.0.0.1, ver docker-compose.yml).
-create role web_anon nologin;
+do $$ begin
+  create role web_anon nologin;
+exception when duplicate_object then null;
+end $$;
 grant usage on schema public to web_anon;
 grant select, insert, update, delete on contratos to web_anon;
 
