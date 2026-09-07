@@ -238,20 +238,55 @@
     .fila {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 13px 16px;
+      gap: 10px;
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
       margin-bottom: 8px;
-      text-decoration: none;
-      color: inherit;
+      padding-right: 10px;
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     .fila:hover { border-color: var(--primary-border); box-shadow: var(--shadow-sm); }
-    .fila:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+
+    .fila-link {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 13px 6px 13px 16px;
+      text-decoration: none;
+      color: inherit;
+      border-radius: 8px;
+    }
+
+    .fila-link:focus-visible { outline: 3px solid var(--primary); outline-offset: -2px; }
+
+    .fila-borrar {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      color: var(--text-muted);
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .fila-borrar:hover {
+      background: #fef2f2;
+      border-color: var(--danger, #ef4444);
+      color: var(--danger, #ef4444);
+    }
+
+    .fila-borrar:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
 
     .fila-datos { min-width: 0; }
 
@@ -401,15 +436,41 @@
       }
 
       lista.innerHTML = visibles.map(c => `
-        <a class="fila" href="${APP}/?contrato=${encodeURIComponent(c.id)}">
-          <span class="fila-datos">
-            <span class="fila-nombre">${escapar(c.nombre)}</span>
-            <span class="fila-fecha">Actualizado el ${fecha(c.updated_at)}</span>
-          </span>
-          <span class="fila-accion">Abrir y editar →</span>
-        </a>
+        <div class="fila">
+          <a class="fila-link" href="${APP}/?contrato=${encodeURIComponent(c.id)}">
+            <span class="fila-datos">
+              <span class="fila-nombre">${escapar(c.nombre)}</span>
+              <span class="fila-fecha">Actualizado el ${fecha(c.updated_at)}</span>
+            </span>
+            <span class="fila-accion">Abrir y editar →</span>
+          </a>
+          <button type="button" class="fila-borrar" data-id="${c.id}"
+                  aria-label="Borrar ${escapar(c.nombre)}" title="Borrar">🗑</button>
+        </div>
       `).join('');
     }
+
+    async function borrar(id) {
+      const contrato = contratos.find(c => c.id === id);
+      if (!contrato) return;
+      if (!confirm(`¿Borrar «${contrato.nombre}»?\n\nSe elimina del servidor y no se puede deshacer.`)) return;
+
+      try {
+        const res = await fetch(BASE_DATOS + '/contratos?id=eq.' + encodeURIComponent(id), { method: 'DELETE' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        contratos = contratos.filter(c => c.id !== id);
+        estado.textContent = contratos.length === 1 ? '1 contrato' : contratos.length + ' contratos';
+        buscador.hidden = contratos.length < 6;
+        pintar(buscador.value);
+      } catch (e) {
+        alert('No se pudo borrar el contrato. Comprueba que Tailscale esté conectado y vuelve a intentarlo.');
+      }
+    }
+
+    lista.addEventListener('click', e => {
+      const boton = e.target.closest('.fila-borrar');
+      if (boton) borrar(boton.dataset.id);
+    });
 
     async function cargar() {
       try {

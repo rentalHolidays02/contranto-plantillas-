@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&display=swap">
   <!-- ?v= evita que el navegador sirva versiones viejas desde caché al abrir por file:// -->
-  <link rel="stylesheet" href="css/styles.css?v=5">
+  <link rel="stylesheet" href="css/styles.css?v=4">
   <script src="js/html2pdf.bundle.min.js"></script>
 </head>
+
 <body>
 
   <!-- CABECERA PRINCIPAL -->
@@ -18,32 +20,43 @@
       <div class="brand-section">
         <img src="assets/logo.svg" alt="Rental Holidays" class="brand-logo" />
         <span class="brand-badge">Contratos 2026</span>
+        <a href="https://rental-inicio.vercel.app" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;" title="Volver a la página de inicio">
+          ← Inicio
+        </a>
       </div>
 
       <!-- Selector y Gestor de Plantillas -->
       <div class="template-bar-header">
-        <label for="selectPlantillas" style="font-size: 12px; font-weight: 700; color: var(--secondary-light);">Plantilla:</label>
+        <label for="selectPlantillas"
+          style="font-size: 12px; font-weight: 700; color: var(--secondary-light);">Plantilla:</label>
         <select id="selectPlantillas" onchange="onTemplateSelected(this.value)">
           <option value="default">⭐ Plantilla Oficial Rental Holidays</option>
         </select>
-        <button type="button" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;" onclick="openSaveTemplateModal()" title="Guardar cambios como nueva plantilla">
+        <button type="button" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;"
+          onclick="openSaveTemplateModal()" title="Guardar cambios como nueva plantilla">
           ⭐ Guardar Plantilla
         </button>
-        <button type="button" id="btnEliminarPlantilla" class="btn btn-danger-outline" style="padding: 5px 9px; font-size: 12px; display: none;" onclick="deleteCurrentTemplate()" title="Eliminar plantilla seleccionada">
+        <button type="button" id="btnEliminarPlantilla" class="btn btn-danger-outline"
+          style="padding: 5px 9px; font-size: 12px; display: none;" onclick="deleteCurrentTemplate()"
+          title="Eliminar plantilla seleccionada">
           🗑️
         </button>
-        <button type="button" id="dbStatusBadge" class="db-status-badge db-status-offline" onclick="connectDbPrompt()" title="Conectar con la base de datos compartida entre PCs">
+        <button type="button" id="dbStatusBadge" class="db-status-badge db-status-offline" onclick="connectDbPrompt()"
+          title="Conectar con la base de datos compartida entre PCs">
           💾 Solo local
         </button>
-        <button type="button" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;" onclick="openContractsListModal()" title="Ver todos los contratos guardados">
+        <button type="button" class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;"
+          onclick="openContractsListModal()" title="Ver todos los contratos guardados">
           📋 Mis Contratos
         </button>
       </div>
 
       <!-- Acciones de Exportación -->
       <div class="header-actions">
-        <input type="file" id="inputImportJSON" accept=".json" style="display: none;" onchange="importTemplatesJSON(event)">
-        <button type="button" class="btn btn-secondary" style="font-size: 12.5px; padding: 7px 12px;" onclick="document.getElementById('inputImportJSON').click()">
+        <input type="file" id="inputImportJSON" accept=".json" style="display: none;"
+          onchange="importTemplatesJSON(event)">
+        <button type="button" class="btn btn-secondary" style="font-size: 12.5px; padding: 7px 12px;"
+          onclick="document.getElementById('inputImportJSON').click()">
           📥 Importar
         </button>
         <button type="button" class="btn btn-primary" onclick="downloadPDF()">
@@ -121,7 +134,8 @@
         <div id="panelModoMensual" class="monthly-dates-box" style="display: block;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <strong style="font-size: 12.5px; color: var(--secondary);">Seleccionar Meses:</strong>
-            <select id="selTipoMensual" style="font-size: 11px; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);">
+            <select id="selTipoMensual"
+              style="font-size: 11px; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border);">
               <option value="completo">Mes Completo</option>
               <option value="quincenal">Por Quincenas</option>
               <option value="personalizado">Fechas Personalizadas</option>
@@ -147,7 +161,8 @@
             <div class="month-chip" data-month="11">Nov</div>
             <div class="month-chip" data-month="12">Dic</div>
           </div>
-          <span class="help-text" style="display: block; margin-bottom: 12px;">Clic en un mes para seleccionarlo. Los meses se insertan en la Cláusula 1 y 3.</span>
+          <span class="help-text" style="display: block; margin-bottom: 12px;">Clic en un mes para seleccionarlo. Los
+            meses se insertan en la Cláusula 1 y 3.</span>
 
           <!-- IMPORTES DE LOS MESES -->
           <div class="monthly-amounts">
@@ -161,7 +176,8 @@
               <span class="switch-label">Importe específico por mes</span>
             </label>
             <div id="monthAmountsContainer" style="display: none; flex-direction: column; gap: 6px;"></div>
-            <span class="help-text" style="margin-top: 8px; display: block;">Los importes se publican en el <strong>ANEXO I</strong> del contrato.</span>
+            <span class="help-text" style="margin-top: 8px; display: block;">Los importes se publican en el
+              <strong>ANEXO I</strong> del contrato.</span>
           </div>
         </div>
 
@@ -169,13 +185,15 @@
         <div id="panelModoTemporadas" class="seasons-manager" style="display: none;">
           <div class="seasons-header">
             <strong style="font-size: 12.5px; color: var(--secondary);">Temporadas Definidas:</strong>
-            <button type="button" class="btn btn-secondary" style="padding: 3px 8px; font-size: 11px;" onclick="addSeason()">+ Añadir</button>
+            <button type="button" class="btn btn-secondary" style="padding: 3px 8px; font-size: 11px;"
+              onclick="addSeason()">+ Añadir</button>
           </div>
           <div id="seasonsListContainer"></div>
         </div>
 
         <!-- PANEL: FECHA FIJA ANUAL -->
-        <div id="panelModoFechas" style="display: none; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+        <div id="panelModoFechas"
+          style="display: none; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
           <div class="form-group" style="margin-bottom: 0;">
             <label for="fechaFinContrato">Fecha Límite Inicial</label>
             <input type="text" id="fechaFinContrato" value="31 de octubre de 2026" placeholder="31 de octubre de 2026">
@@ -190,21 +208,25 @@
         </div>
         <div class="form-group">
           <label for="nombrePropietario">Nombre Completo (Doña/Don)</label>
-          <input type="text" id="nombrePropietario" placeholder="Nombre y Apellidos" oninput="onFieldInput('nombrePropietario', this.value)">
+          <input type="text" id="nombrePropietario" placeholder="Nombre y Apellidos"
+            oninput="onFieldInput('nombrePropietario', this.value)">
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div class="form-group">
             <label for="nifPropietario">NIF / NIE</label>
-            <input type="text" id="nifPropietario" placeholder="12345678X" oninput="onFieldInput('nifPropietario', this.value)">
+            <input type="text" id="nifPropietario" placeholder="12345678X"
+              oninput="onFieldInput('nifPropietario', this.value)">
           </div>
           <div class="form-group">
             <label for="cpPropietario">Código Postal</label>
-            <input type="text" id="cpPropietario" placeholder="12003" oninput="onFieldInput('cpPropietario', this.value)">
+            <input type="text" id="cpPropietario" placeholder="12003"
+              oninput="onFieldInput('cpPropietario', this.value)">
           </div>
         </div>
         <div class="form-group">
           <label for="domicilioPropietario">Domicilio Completo</label>
-          <input type="text" id="domicilioPropietario" placeholder="Calle, Número, Ciudad" oninput="onFieldInput('domicilioPropietario', this.value)">
+          <input type="text" id="domicilioPropietario" placeholder="Calle, Número, Ciudad"
+            oninput="onFieldInput('domicilioPropietario', this.value)">
         </div>
       </div>
 
@@ -215,16 +237,19 @@
         </div>
         <div class="form-group">
           <label for="descripcionVivienda">Ubicación / Descripción</label>
-          <input type="text" id="descripcionVivienda" placeholder="Ej: Apartamento en Primera Línea de Playa" oninput="onFieldInput('descripcionVivienda', this.value)">
+          <input type="text" id="descripcionVivienda" placeholder="Ej: Apartamento en Primera Línea de Playa"
+            oninput="onFieldInput('descripcionVivienda', this.value)">
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
           <div class="form-group">
             <label for="refInmueble">Nº Registro VT</label>
-            <input type="text" id="refInmueble" placeholder="VT-XXXXX-CS" oninput="onFieldInput('refInmueble', this.value)">
+            <input type="text" id="refInmueble" placeholder="VT-XXXXX-CS"
+              oninput="onFieldInput('refInmueble', this.value)">
           </div>
           <div class="form-group">
             <label for="municipioInmueble">Municipio</label>
-            <input type="text" id="municipioInmueble" placeholder="Castellón / Peñíscola" oninput="onFieldInput('municipioInmueble', this.value)">
+            <input type="text" id="municipioInmueble" placeholder="Castellón / Peñíscola"
+              oninput="onFieldInput('municipioInmueble', this.value)">
           </div>
         </div>
       </div>
@@ -236,7 +261,9 @@
         </div>
         <div class="form-group">
           <label for="clausulaEspecial">Acuerdos o pactos adicionales</label>
-          <textarea id="clausulaEspecial" rows="3" placeholder="Ej: El propietario se reserva la primera quincena de julio..." oninput="onFieldInput('clausulaEspecial', this.value)" style="resize: vertical;"></textarea>
+          <textarea id="clausulaEspecial" rows="3"
+            placeholder="Ej: El propietario se reserva la primera quincena de julio..."
+            oninput="onFieldInput('clausulaEspecial', this.value)" style="resize: vertical;"></textarea>
         </div>
       </div>
 
@@ -244,7 +271,8 @@
       <div class="card">
         <div class="card-title">
           <div><span class="icon-badge">✍️</span> Firma del Propietario</div>
-          <button type="button" class="btn-danger-outline btn" style="padding: 3px 8px; font-size: 11px;" onclick="limpiarFirma()">Limpiar</button>
+          <button type="button" class="btn-danger-outline btn" style="padding: 3px 8px; font-size: 11px;"
+            onclick="limpiarFirma()">Limpiar</button>
         </div>
         <div class="signature-box">
           <canvas id="canvasFirma"></canvas>
@@ -288,7 +316,8 @@
           <span>📝 Los textos del contrato también son editables directamente con un clic</span>
         </div>
         <div class="toolbar-group">
-          <button type="button" class="btn btn-primary" style="padding: 6px 14px; font-size: 12.5px;" onclick="downloadPDF()">
+          <button type="button" class="btn btn-primary" style="padding: 6px 14px; font-size: 12.5px;"
+            onclick="downloadPDF()">
             📄 Descargar PDF
           </button>
         </div>
@@ -326,7 +355,8 @@
   <div id="modalMisContratos" class="modal-overlay">
     <div class="modal-content" style="max-width: 560px;">
       <h3 class="modal-title">📋 Mis Contratos</h3>
-      <input type="text" id="inputBuscarContrato" class="contracts-search" placeholder="Buscar por nombre de propietario o plantilla…" oninput="renderContractsList(this.value)">
+      <input type="text" id="inputBuscarContrato" class="contracts-search"
+        placeholder="Buscar por nombre de propietario o plantilla…" oninput="renderContractsList(this.value)">
       <div id="contractsListContainer" class="contracts-list"></div>
       <div class="modal-actions">
         <button type="button" class="btn btn-secondary" onclick="closeContractsListModal()">Cerrar</button>
@@ -336,7 +366,8 @@
 
   <!-- OVERLAY DE CARGA -->
   <div id="overlayLoading" class="modal-overlay">
-    <div style="background: white; border-radius: 12px; padding: 25px; text-align: center; max-width: 320px; box-shadow: var(--shadow-lg);">
+    <div
+      style="background: white; border-radius: 12px; padding: 25px; text-align: center; max-width: 320px; box-shadow: var(--shadow-lg);">
       <div class="spinner"></div>
       <h4 style="color: var(--secondary); margin-bottom: 6px; margin-top: 10px;">Generando PDF</h4>
       <p style="font-size: 12px; color: var(--text-muted);">Preparando el documento legal oficial...</p>
@@ -344,9 +375,15 @@
   </div>
 
   <style>
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
     .spinner {
-      width: 36px; height: 36px;
+      width: 36px;
+      height: 36px;
       border: 4px solid #f1f5f9;
       border-top: 4px solid var(--primary);
       border-radius: 50%;
@@ -355,9 +392,10 @@
     }
   </style>
 
-  <script src="js/contractData.js?v=5"></script>
-  <script src="js/signature.js?v=5"></script>
-  <script src="js/db.js?v=5"></script>
-  <script src="js/app.js?v=5"></script>
+  <script src="js/contractData.js?v=4"></script>
+  <script src="js/signature.js?v=4"></script>
+  <script src="js/db.js?v=4"></script>
+  <script src="js/app.js?v=4"></script>
 </body>
+
 </html>
