@@ -89,6 +89,20 @@ async function abrirContratoDeLaURL() {
     AppState.firmaBase64 = remoto.firma_base64 || null;
     AppState.currentTemplateId = remoto.id;
 
+    const entrada = {
+      id: remoto.id,
+      name: remoto.nombre,
+      date: remoto.updated_at,
+      config: remoto.config,
+      formData: remoto.form_data,
+      contractHTML: remoto.contrato_html,
+      firmaBase64: remoto.firma_base64
+    };
+    const existente = AppState.templates.find(t => t.id === remoto.id);
+    if (existente) Object.assign(existente, entrada);
+    else AppState.templates.push(entrada);
+    localStorage.setItem('rental_holidays_templates', JSON.stringify(AppState.templates));
+
     renderContract();
     syncUIControlsFromConfig();
     updateTemplateDropdown();
@@ -545,6 +559,39 @@ function syncUIControlsFromConfig() {
 
   renderSeasonsList();
   actualizarFechaTexto();
+}
+
+/**
+ * Guarda los cambios sobre el contrato que está abierto, sin crear uno nuevo.
+ * Si no hay ninguno abierto, cae en el diálogo de guardar como plantilla nueva.
+ */
+async function guardarCambios() {
+  const actual = AppState.templates.find(t => t.id === AppState.currentTemplateId);
+  if (!isUuid(AppState.currentTemplateId) || !actual) {
+    openSaveTemplateModal();
+    return;
+  }
+
+  syncInputValuesToDOM();
+  const contractElement = document.getElementById('contratoDocumento');
+
+  Object.assign(actual, {
+    config: JSON.parse(JSON.stringify(AppState.config)),
+    formData: JSON.parse(JSON.stringify(AppState.formData)),
+    contractHTML: contractElement ? contractElement.innerHTML : '',
+    firmaBase64: AppState.firmaBase64,
+    date: new Date().toISOString()
+  });
+
+  try {
+    await dbUpsertContrato(actual);
+    localStorage.setItem('rental_holidays_templates', JSON.stringify(AppState.templates));
+    updateTemplateDropdown();
+    showToast(`Cambios guardados en "${actual.name}" ☁️`, 'success');
+  } catch (e) {
+    console.error(e);
+    showToast('No se pudieron guardar los cambios: ' + e.message, 'danger');
+  }
 }
 
 function openSaveTemplateModal() {
