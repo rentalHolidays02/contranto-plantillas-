@@ -401,6 +401,15 @@ async function syncTemplatesFromDb() {
         AppState.templates.push({ id: r.id, name: r.nombre, date: r.updated_at, remoteOnly: true });
       }
     });
+
+    // Lo borrado en el servidor desaparece también aquí. Se respetan las plantillas
+    // que nunca llegaron a subirse, que solo viven en este navegador.
+    const enElServidor = new Set(remoteList.map(r => r.id));
+    AppState.templates = AppState.templates.filter(t => !isUuid(t.id) || enElServidor.has(t.id));
+    if (!AppState.templates.some(t => t.id === AppState.currentTemplateId)) {
+      AppState.currentTemplateId = 'default';
+    }
+
     localStorage.setItem('rental_holidays_templates', JSON.stringify(AppState.templates));
     updateTemplateDropdown();
     updateDbStatusBadge('online');
